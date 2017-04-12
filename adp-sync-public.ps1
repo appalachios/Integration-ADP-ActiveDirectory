@@ -47,6 +47,7 @@ function Get-ADPWorkerCount
 function Get-ADPworkersArrayList
 {
     $totalWorkersCount = Get-ADPWorkerCount #get the total number of worker records in ADP
+    $totalRecordsProcessed = 0
 
     $loopSkip = 1 # We are not skipping any records yet, so we 'skip' to the first record
     
@@ -62,23 +63,25 @@ function Get-ADPworkersArrayList
     #Get worker information
     for($n=0; $n -lt $numberOfLoopTimesRounded; $n++)
         {
-    
+     
             #import data from ADP
             $loopRequest = Invoke-RestMethod "https://api.adp.com/hr/v2/workers?`$top=50&`$skip=$loopSkip" -CertificateThumbprint $certThumbprint -Headers $Headers
     
             $nestedLoopCount = 0 #reset the nested loop count during every run of the parent loop
     
             #add imported data to the arrayList
-               for ($c=0; $c -lt $numberOfWorkerPerLoop; $c++)
+               for ($c=0; ($c -lt $numberOfWorkerPerLoop) -and ($totalRecordsProcessed -lt $totalWorkersCount); $c++)
                 {
-                    $workerList.Add($loopRequest.workers[$nestedLoopCount])
-                    $nestedLoopCount++
+                    $workerList.Add($loopRequest.workers[$c])
+
+                    $totalRecordsProcessed++
                 }
 
     $loopskip += $numberOfWorkerPerLoop;
 }
 
 }
+
 
 #finds a worker and returns their array position
 function Find-Worker ($findRequest)
