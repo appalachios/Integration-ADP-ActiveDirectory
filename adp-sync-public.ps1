@@ -54,14 +54,10 @@ function Get-ADPworkersArrayList
     #set the number of worker records that are obtained during each loop. ADP max is currently 50
     $numberOfWorkerPerLoop = 50
 
-    #obtain the number of times to run the parent loop
-    $numberOfLoopTimes = $totalWorkersCount / $numberOfWorkerPerLoop
-    $numberOfLoopTimesRounded = [math]::Round(32.62)
-
     $workerList.Clear() #clear the arrayList
 
     #Get worker information
-    for($n=0; $n -lt $numberOfLoopTimesRounded; $n++)
+    for($n=0; $totalRecordsProcessed -lt $totalWorkersCount; $n++)
         {
      
             #import data from ADP
@@ -77,8 +73,8 @@ function Get-ADPworkersArrayList
                     $totalRecordsProcessed++
                 }
 
-    $loopskip += $numberOfWorkerPerLoop;
-}
+            $loopskip += $numberOfWorkerPerLoop;
+        }
 
 }
 
