@@ -96,6 +96,32 @@ function Find-Worker ($findRequest)
 }
 
 
+#returns the hire status of a worker, given their position in the arrayList
+function Get-WorkerHireStatus($workerPosition)
+{
+
+    if($workerList[$workerPosition].workerDates.terminationDate)
+        {
+            return "Terminated"
+        }
+
+    if($workerList[$workerPosition].workerDates.rehireDate)
+        {
+            return "Rehired"
+        }
+
+    if($workerList[$workerPosition].workerDates.originalHireDate)
+        {
+            return "Hired"
+        }
+    
+    else
+        {
+            return "Error: Get-WorkerHireStatus failed. Unable to determine worker status"
+        }
+
+}
+
 #---------------End of Functions---------------#
 
 
